@@ -34,3 +34,16 @@ h4 {
     background-size: cover;
     color: #C0B283;
 }
+
+.subheads {
+    background-color: #373737 !important;
+    background-size: cover !important;
+    color: #C0B283 !important;
+    margin: 25px !important;
+    border-radius: 5px !important;
+}
+
+.table {
+    background-color: #373737 !important;
+    color: #C0B283 !important;
+}

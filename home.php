@@ -11,126 +11,6 @@ if( !isset($_SESSION['user']) ) {
 // select logged-in user detail
 $res=mysqli_query($conn, "SELECT * FROM user WHERE userId=".$_SESSION['user']);
 $userRow=mysqli_fetch_array($res, MYSQLI_ASSOC);
-
-// Select query execution - Books
-$sql = "SELECT * FROM books";
-if($result = mysqli_query($link, $sql)){
-    if(mysqli_num_rows($result) > 0){
-        echo "<table>";
-            echo "<tr>";
-                echo "<th>Book ID</th>";
-                echo "<th>Title</th>";
-                echo "<th>Image</th>";
-                echo "<th>Genre</th>";
-                echo "<th>ISBN Code</th>";
-                echo "<th>Publish Date</th>";
-                echo "<th>Description</th>";
-                echo "<th>Publisher ID</th>";
-                echo "<th>Author ID</th>";
-            echo "</tr>";
-        while($row = mysqli_fetch_array($result)){
-            echo "<tr>";
-                echo "<td>" . $row['book_id'] . "</td>";
-                echo "<td>" . $row['title'] . "</td>";
-                echo "<td>" . $row['img'] . "</td>";
-                echo "<td>" . $row['genre'] . "</td>";
-                echo "<td>" . $row['ISBN_code'] . "</td>";
-                echo "<td>" . $row['publish_date'] . "</td>";
-                echo "<td>" . $row['description'] . "</td>";
-                echo "<td>" . $row['fk_publisher_id'] . "</td>";
-                echo "<td>" . $row['fk_author_id'] . "</td>";
-            echo "</tr>";
-        }
-        echo "</table>";
-        // Free result set
-        mysqli_free_result($result);
-    } else{
-        echo "No records matching your query were found.";
-    }
-} else{
-    echo "ERROR: Not able to execute $sql. " . mysqli_error($link);
-}
-
-// Select query execution - CDs
-$sql = "SELECT * FROM cds";
-if($result = mysqli_query($link, $sql)){
-    if(mysqli_num_rows($result) > 0){
-        echo "<table>";
-            echo "<tr>";
-                echo "<th>CD ID</th>";
-                echo "<th>Title</th>";
-                echo "<th>Image</th>";
-                echo "<th>Genre</th>";
-                echo "<th>ISBN Code</th>";
-                echo "<th>Publish Date</th>";
-                echo "<th>Description</th>";
-                echo "<th>Publisher ID</th>";
-                echo "<th>Author ID</th>";
-            echo "</tr>";
-        while($row = mysqli_fetch_array($result)){
-            echo "<tr>";
-                echo "<td>" . $row['CD_id'] . "</td>";
-                echo "<td>" . $row['title'] . "</td>";
-                echo "<td>" . $row['img'] . "</td>";
-                echo "<td>" . $row['genre'] . "</td>";
-                echo "<td>" . $row['ISBN_code'] . "</td>";
-                echo "<td>" . $row['publish_date'] . "</td>";
-                echo "<td>" . $row['description'] . "</td>";
-                echo "<td>" . $row['fk_publisher_id'] . "</td>";
-                echo "<td>" . $row['fk_author_id'] . "</td>";
-            echo "</tr>";
-        }
-        echo "</table>";
-        // Free result set
-        mysqli_free_result($result);
-    } else{
-        echo "No records matching your query were found.";
-    }
-} else{
-    echo "ERROR: Not able to execute $sql. " . mysqli_error($link);
-}
-
-// Select query execution - DVDs
-$sql = "SELECT * FROM dvds";
-if($result = mysqli_query($link, $sql)){
-    if(mysqli_num_rows($result) > 0){
-        echo "<table>";
-            echo "<tr>";
-                echo "<th>DVD ID</th>";
-                echo "<th>Title</th>";
-                echo "<th>Image</th>";
-                echo "<th>Genre</th>";
-                echo "<th>ISBN Code</th>";
-                echo "<th>Publish Date</th>";
-                echo "<th>Description</th>";
-                echo "<th>Publisher ID</th>";
-                echo "<th>Author ID</th>";
-            echo "</tr>";
-        while($row = mysqli_fetch_array($result)){
-            echo "<tr>";
-                echo "<td>" . $row['DVD_id'] . "</td>";
-                echo "<td>" . $row['title'] . "</td>";
-                echo "<td>" . $row['img'] . "</td>";
-                echo "<td>" . $row['genre'] . "</td>";
-                echo "<td>" . $row['ISBN_code'] . "</td>";
-                echo "<td>" . $row['publish_date'] . "</td>";
-                echo "<td>" . $row['description'] . "</td>";
-                echo "<td>" . $row['fk_publisher_id'] . "</td>";
-                echo "<td>" . $row['fk_author_id'] . "</td>";
-            echo "</tr>";
-        }
-        echo "</table>";
-        // Free result set
-        mysqli_free_result($result);
-    } else{
-        echo "No records matching your query were found.";
-    }
-} else{
-    echo "ERROR: Not able to execute $sql. " . mysqli_error($link);
-}
-
-mysqli_close($link);
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -161,6 +41,126 @@ mysqli_close($link);
       </div>
 </div>
 </div><br>
+
+ <h1 class="text-center subheads">Books</h1>
+        <hr>
+        <section id="books">
+        <?php
+$sql = "SELECT
+`books`.`book_id`,
+`books`.`title`,
+`books`.`img`,
+`books`.`genre`,
+`books`.`ISBN_code`,
+`books`.`publish_date`,
+`books`.`description`,
+`publisher`.`pname`,
+`author`.`aname`,
+FROM `books`
+LEFT JOIN `publisher`
+ON `books`.`fk_publisher_id`= `publisher`.`publisher_id`
+LEFT JOIN `author`
+ON `books`.`fk_author_id`= `author`.`author_id` ";
+        $result = mysqli_query($conn, $sql);
+        
+        
+        echo"<table class='table table-dark table-bordered'>
+                      <thead>
+                        <tr>
+                          <th scope='col' style='border-color:#373737; text-align:center;'>Title</th>
+                          <th scope='col' style='border-color:#373737; text-align:center;'>Image URL</th>
+                          <th scope='col' style='border-color:#373737; text-align:center;'>Author</th>
+                          <th scope='col' style='border-color:#373737; text-align:center;'>Publisher</th> 
+                          <th scope='col' style='border-color:#373737; text-align:center;'>ISBN Code</th>
+                          <th scope='col' style='border-color:#373737; text-align:center;'>Publish Date</th>
+                          <th scope='col' style='border-color:#373737; text-align:center;'>Description</th>				     
+                        </tr>
+                      </thead>";		
+                    while($row = mysqli_fetch_array($result)) {	
+               echo"<tr>
+               <td>{$row['title']}</td>
+               <td><{$row['img']}></td>
+               <td>{$row['aname']}</td>
+               <td>{$row['pname']}</td>
+               <td>{$row['ISBN_code']}</td>
+               <td>{$row['publish_date']}</td>
+               <td>{$row['description']}</td>
+               </tr>";
+        };
+        echo "</table>";
+        ?>
+        </section>
+        <hr>
+        <h1 class='text-center subheads'>CDs</h1>
+        <hr>
+        <section id="CDs">
+        <?php
+        $sql = "SELECT * FROM cds";
+        $result = mysqli_query($conn, $sql);
+        
+        
+        echo"<table class='table table-dark table-bordered'>
+                      <thead>
+                        <tr>
+                          <th scope='col' style='border-color:#373737; text-align:center;'>Title</th>
+                          <th scope='col' style='border-color:#373737; text-align:center;'>Image URL</th>
+                          <th scope='col' style='border-color:#373737; text-align:center;'>Author</th>
+                          <th scope='col' style='border-color:#373737; text-align:center;'>Publisher</th>
+                          <th scope='col' style='border-color:#373737; text-align:center;'>Publish Date</th>
+                          <th scope='col' style='border-color:#373737; text-align:center;'>Description</th>				     
+                        </tr>
+                      </thead>";		
+                    while($row = mysqli_fetch_array($result)) {	
+               echo"<tr>
+               <td>{$row['title']}</td>
+               <td><{$row['img']}></td>
+               <td>{$row['fk_author_id']}</td>
+               <td>{$row['fk_publisher_id']}</td>
+               <td>{$row['publish_date']}</td>
+               <td>{$row['description']}</td>
+               </tr>";
+               
+            };
+        echo "</table>";
+   
+        ?>
+
+        </section>
+
+        <hr>
+        <h1 class='text-center subheads'>DVDs</h1>
+        <hr>
+        <section id="DVDs">
+        <?php
+        $sql = "SELECT * FROM dvds";
+        $result = mysqli_query($conn, $sql);
+        
+        
+        echo"<table class='table table-dark table-bordered'>
+                      <thead>
+                        <tr>
+                          <th scope='col' style='border-color:#373737; text-align:center;'>Title</th>
+                          <th scope='col' style='border-color:#373737; text-align:center;'>Image URL</th>
+                          <th scope='col' style='border-color:#373737; text-align:center;'>Author</th>
+                          <th scope='col' style='border-color:#373737; text-align:center;'>Publisher</th>
+                          <th scope='col' style='border-color:#373737; text-align:center;'>Publish Date</th>
+                          <th scope='col' style='border-color:#373737; text-align:center;'>Description</th>				     
+                        </tr>
+                      </thead>";		
+                    while($row = mysqli_fetch_array($result)) {	
+               echo"<tr>
+               <td>{$row['title']}</td>
+               <td><{$row['img']}></td>
+               <td>{$row['fk_author_id']}</td>
+               <td>{$row['fk_publisher_id']}</td>
+               <td>{$row['publish_date']}</td>
+               <td>{$row['description']}</td>
+               </tr>";
+        };
+        echo "</table>";
+?>
+</section>
+
 </div>
 
     
